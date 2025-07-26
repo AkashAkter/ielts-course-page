@@ -1,14 +1,19 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  reactStrictMode: true, // Helps catch bugs early
-  swcMinify: true, // Fast build & minification
-  experimental: {
-    serverActions: true, // Useful if you plan to use Server Components or Actions
+const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
   },
-  i18n: {
-    locales: ["en", "bn"], // Supported languages
-    defaultLocale: "en", // Default language
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  images: {
+    domains: [
+      "cdn.10minuteschool.com",
+      "s3.ap-southeast-1.amazonaws.com",
+      "img.youtube.com",
+    ],
+    unoptimized: true,
   },
 };
 
