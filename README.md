@@ -2,6 +2,10 @@
 
 This project is a Next.js application designed to display a product page for the "IELTS Course by Munzereen Shahid," fetching data from a public API. It focuses on demonstrating key frontend development practices including responsive design, internationalization, server-side rendering, and efficient state management.
 
+## Live Site
+
+You can view the live project here: [https://ielts-course-page.vercel.app/](https://ielts-course-page.vercel.app/)
+
 ## Features
 
 *   **Dynamic Content:** Fetches product details (title, description, sections, media, checklist, CTA text) from the provided API endpoint.
