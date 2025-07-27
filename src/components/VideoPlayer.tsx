@@ -65,7 +65,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ media }) => {
     selectItem((currentIndex - 1 + allMedia.length) % allMedia.length);
 
   return (
-    <section className=" p-4 xl:p-6">
+    <section className=" p-4 xl:p-6 ">
       <div className="space-y-4">
         {/* Main Media Display */}
         <div className="aspect-video bg-black overflow-hidden relative">

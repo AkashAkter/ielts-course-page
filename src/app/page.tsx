@@ -183,7 +183,7 @@ export default async function Home({ searchParams }: PageProps) {
           <div className="w-2/6">
             {/* Video Player - Negative margin to align with hero */}
             {productData.media && productData.media.length > 0 && (
-              <div className="-mt-20 xl:-mt-24">
+              <div className=" ">
                 <VideoPlayer media={productData.media} />
               </div>
             )}
