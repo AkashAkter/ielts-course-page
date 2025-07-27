@@ -1,19 +1,20 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
-import { Menu, X, Search, Phone, ChevronDown } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
+import type React from "react"
+import { useState } from "react"
+import { Menu, X, Search, Phone, ChevronDown } from "lucide-react"
+import { useRouter, useSearchParams } from "next/navigation"
+import Image from "next/image"
 
 interface HeaderProps {
-  currentLang: "en" | "bn";
+  currentLang: "en" | "bn"
 }
 
 interface MenuItem {
-  label: { en: string; bn: string };
-  href: string;
-  hasDropdown?: boolean;
-  dropdownItems?: { label: { en: string; bn: string }; href: string }[];
+  label: { en: string; bn: string }
+  href: string
+  hasDropdown?: boolean
+  dropdownItems?: { label: { en: string; bn: string }; href: string }[]
 }
 
 const menuItems: MenuItem[] = [
@@ -45,40 +46,40 @@ const menuItems: MenuItem[] = [
     label: { en: "Jobs", bn: "চাকরি" },
     href: "/jobs",
   },
-];
+]
 
 export default function Header({ currentLang }: HeaderProps) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
   const toggleLanguage = () => {
-    const newLang = currentLang === "en" ? "bn" : "en";
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("lang", newLang);
-    router.push(`?${params.toString()}`);
-  };
+    const newLang = currentLang === "en" ? "bn" : "en"
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("lang", newLang)
+    router.push(`?${params.toString()}`)
+  }
 
   const handleLogoClick = () => {
-    router.push("/");
-  };
+    router.push("/")
+  }
 
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+      router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
     }
-  };
+  }
 
   const texts = {
     search: { en: "Search courses...", bn: "কোর্স খুঁজুন..." },
     login: { en: "Log In", bn: "লগ ইন" },
     menu: { en: "Menu", bn: "মেনু" },
     hotline: "16910",
-  };
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm">
@@ -95,10 +96,7 @@ export default function Header({ currentLang }: HeaderProps) {
                 {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
 
-              <div
-                className="cursor-pointer flex-shrink-0"
-                onClick={handleLogoClick}
-              >
+              <div className="cursor-pointer flex-shrink-0" onClick={handleLogoClick}>
                 <Image
                   src="https://cdn.10minuteschool.com/images/svg/10mslogo-svg.svg"
                   alt="10 Minute School"
@@ -111,15 +109,9 @@ export default function Header({ currentLang }: HeaderProps) {
             </div>
 
             {/* Search */}
-            <form
-              onSubmit={handleSearch}
-              className="hidden md:flex flex-1 max-w-md"
-            >
+            <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md">
               <div className="relative w-full">
-                <Search
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                  size={18}
-                />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                 <input
                   type="text"
                   value={searchQuery}
@@ -136,9 +128,7 @@ export default function Header({ currentLang }: HeaderProps) {
                 <div
                   key={item.href}
                   className="relative"
-                  onMouseEnter={() =>
-                    item.hasDropdown && setActiveDropdown(item.href)
-                  }
+                  onMouseEnter={() => item.hasDropdown && setActiveDropdown(item.href)}
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
                   <a
@@ -146,9 +136,7 @@ export default function Header({ currentLang }: HeaderProps) {
                     className="flex items-center gap-1 text-gray-700 hover:text-green-600 font-medium text-sm"
                   >
                     {item.label[currentLang]}
-                    {item.hasDropdown && (
-                      <ChevronDown size={16} className="text-gray-500" />
-                    )}
+                    {item.hasDropdown && <ChevronDown size={16} className="text-gray-500" />}
                   </a>
 
                   {item.hasDropdown && activeDropdown === item.href && (
@@ -197,10 +185,7 @@ export default function Header({ currentLang }: HeaderProps) {
             {/* Mobile Search */}
             <form onSubmit={handleSearch} className="mb-4">
               <div className="relative">
-                <Search
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                  size={18}
-                />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                 <input
                   type="text"
                   value={searchQuery}
@@ -256,5 +241,5 @@ export default function Header({ currentLang }: HeaderProps) {
         </div>
       )}
     </header>
-  );
+  )
 }

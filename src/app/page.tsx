@@ -11,6 +11,7 @@ import ChecklistSection from "@/components/ChecklistSection";
 import Footer from "@/components/Footer";
 import { notFound } from "next/navigation";
 import CourseExclusiveSection from "@/components/CourseExclusiveSection";
+import MobileHeroContent from "@/components/MobileHeroContent";
 
 interface PageProps {
   searchParams: { lang?: "en" | "bn" };
@@ -43,18 +44,93 @@ export default async function Home({ searchParams }: PageProps) {
     ) || [];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       {/* Header with language toggle */}
       <Header currentLang={lang} />
 
-      {/* Hero Section with product title and description */}
-      <Hero title={productData.title} description={productData.description} />
+      {/* Hero Section - Desktop/Tablet only */}
+      <div className="hidden lg:block">
+        <Hero title={productData.title} description={productData.description} />
+      </div>
 
-      {/* Main Content - Two Column Layout */}
-      <main className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left Column - 60% width on desktop */}
-          <div className="w-full lg:w-3/5 space-y-8">
+      {/* Main Content Container - Max width 1200px */}
+      <main className="max-w-[1300] mx-auto px-4 py-6 lg:py-8">
+        {/* Mobile Layout - Vertical Flow */}
+        <div className="block lg:hidden space-y-6">
+          {/* Mobile: 1. Trailer Video Section */}
+          {productData.media && productData.media.length > 0 && (
+            <div className="mb-6">
+              <VideoPlayer media={productData.media} />
+            </div>
+          )}
+
+          {/* Mobile: 2. Product Title & Description */}
+          <MobileHeroContent
+            title={productData.title}
+            description={productData.description}
+          />
+
+          {/* Mobile: 3. CTA Section (price + enroll button) */}
+          <div className="mb-6">
+            <CTASection
+              ctaText={productData.cta_text}
+              productData={productData}
+              currentLang={lang}
+            />
+          </div>
+
+          {/* Mobile: 4. What You'll Get */}
+          {productData.checklist && productData.checklist.length > 0 && (
+            <div className="mb-6">
+              <ChecklistSection checklist={productData.checklist} />
+            </div>
+          )}
+
+          {/* Mobile: 5. Course Instructor */}
+          {instructorSections.length > 0 &&
+            instructorSections.map((section) => (
+              <div key={section.order_idx} className="mb-6">
+                <InstructorSection section={section} />
+              </div>
+            ))}
+
+          {/* Mobile: 6. How the Course is Laid Out */}
+          {featuresSections.length > 0 &&
+            featuresSections.map((section) => (
+              <div key={section.order_idx} className="mb-6">
+                <FeaturesSection section={section} />
+              </div>
+            ))}
+
+          {/* Mobile: 7. What You Will Learn */}
+          {pointersSections.length > 0 &&
+            pointersSections.map((section) => (
+              <div key={section.order_idx} className="mb-6">
+                <PointersSection section={section} />
+              </div>
+            ))}
+
+          {/* Mobile: 8. Course Exclusive Features */}
+          {featureExplanationSections.length > 0 &&
+            featureExplanationSections.map((section) => (
+              <div key={section.order_idx} className="mb-6">
+                <CourseExclusiveSection section={section} />
+              </div>
+            ))}
+
+          {/* Mobile: 9. Course Details */}
+          {aboutSections.length > 0 &&
+            aboutSections.map((section) => (
+              <div key={section.order_idx} className="mb-6">
+                <AboutSection section={section} />
+              </div>
+            ))}
+        </div>
+
+        {/* Desktop/Tablet Layout - Two Column */}
+        <div className="hidden lg:flex gap-6 xl:gap-8">
+          {/* Left Column - 60% width */}
+          <div className="w-4/6 space-y-8">
             {/* Instructors */}
             {instructorSections.length > 0 &&
               instructorSections.map((section) => (
@@ -93,36 +169,56 @@ export default async function Home({ searchParams }: PageProps) {
               featuresSections.length === 0 &&
               pointersSections.length === 0 &&
               aboutSections.length === 0 && (
-                <div className="bg-white rounded-lg shadow-md p-8 text-center">
-                  <p className="text-gray-600">
+                <div className="bg-white rounded-lg shadow-md p-6 xl:p-8 text-center">
+                  <p className="text-gray-600 text-sm xl:text-base">
                     Course content is being updated. Please check back later.
                   </p>
                 </div>
               )}
           </div>
 
-          {/* Right Column - 40% width on desktop */}
-          <div className="w-full lg:w-2/5 space-y-8">
-            {/* Product trailer (YouTube player) */}
+          {/* Right Column - 40% width */}
+          <div className="w-2/6">
+            {/* Video Player - Negative margin to align with hero */}
             {productData.media && productData.media.length > 0 && (
-              <VideoPlayer media={productData.media} />
+              <div className="-mt-20 xl:-mt-24 mb-8">
+                <VideoPlayer media={productData.media} />
+              </div>
             )}
 
-            {/* CTA Section */}
-            {productData.cta_text && (
-              <CTASection ctaText={productData.cta_text} />
-            )}
+            {/* Static container for CTA and Checklist */}
+            <div className="space-y-6">
+              {/* CTA Section */}
+              <div>
+                <CTASection
+                  ctaText={productData.cta_text}
+                  productData={productData}
+                  currentLang={lang}
+                />
+              </div>
 
-            {/* Checklist */}
-            {productData.checklist && productData.checklist.length > 0 && (
-              <ChecklistSection checklist={productData.checklist} />
-            )}
+              {/* Checklist */}
+              {productData.checklist && productData.checklist.length > 0 && (
+                <div>
+                  <ChecklistSection checklist={productData.checklist} />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </main>
 
       {/* Footer */}
       <Footer />
+
+      {/* Mobile CTA (no longer sticky) */}
+      <div className="lg:hidden p-4 bg-white border-t border-gray-200 shadow-lg">
+        <CTASection
+          ctaText={productData.cta_text}
+          productData={productData}
+          currentLang={lang}
+        />
+      </div>
     </div>
   );
 }

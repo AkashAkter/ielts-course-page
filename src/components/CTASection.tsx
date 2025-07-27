@@ -1,37 +1,39 @@
-import type { CtaText } from "@/types/product";
+"use client";
+import type { CtaText, ProductData } from "@/types/product";
 import { ShoppingCart } from "lucide-react";
 
 interface CTASectionProps {
   ctaText: CtaText;
+  productData: ProductData;
+  currentLang: "en" | "bn"; // Added for language-specific price
 }
 
-export default function CTASection({ ctaText }: CTASectionProps) {
+export default function CTASection({
+  ctaText,
+  productData,
+  currentLang,
+}: CTASectionProps) {
+  // Hardcoded price as per instruction
+  const price = 1000;
+
+  const priceDisplay = currentLang === "en" ? `৳${price}` : `${price} টাকা`;
+
   return (
-    <section className="sticky top-20 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-lg shadow-lg p-6">
-      <div className="text-center mb-6">
-        <div className="text-3xl font-bold mb-2">৳5,000</div>
-        <div className="text-blue-100 text-sm">Course Price</div>
-      </div>
-
-      <button className="w-full bg-white text-blue-600 px-6 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors flex items-center justify-center gap-2 mb-4">
-        <ShoppingCart size={20} />
-        {ctaText?.name || "Enroll Now"}
+    <section className="bg-white rounded-lg p-4 xl:p-6">
+      <button
+        className={`
+          w-full px-4 xl:px-6 py-3 xl:py-4 rounded-lg font-bold text-base xl:text-lg transition-all duration-200 flex items-center justify-center gap-2
+          hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2
+          bg-[#1CAB55] text-white hover:bg-green-600 focus:ring-[#1CAB55]
+        `}
+      >
+        <ShoppingCart size={18} className="xl:w-5 xl:h-5" />
+        <span className="flex items-center gap-2">
+          <span>{priceDisplay}</span>
+          <span>•</span>
+          <span>{ctaText?.name || "Enroll Now"}</span>
+        </span>
       </button>
-
-      <div className="mt-6 space-y-3 text-sm">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-          <span>Lifetime Access</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-          <span>Certificate of Completion</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-          <span>24/7 Support</span>
-        </div>
-      </div>
     </section>
   );
 }

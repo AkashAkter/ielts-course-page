@@ -8,50 +8,43 @@ interface FeaturesSectionProps {
 
 export default function FeaturesSection({ section }: FeaturesSectionProps) {
   return (
-    <section>
-      {/* Header remains with white background */}
-      <div className="bg-white rounded-lg mb-6">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
+    <section className="bg-white">
+      <div className="mb-6">
+        <h2 className="text-xl xl:text-2xl font-bold mb-4 text-gray-800">
           {section.name}
         </h2>
         {section.description && (
           <div
-            className="text-gray-600 mt-2 prose max-w-none"
+            className="text-gray-600 prose prose-sm xl:prose-base max-w-none"
             dangerouslySetInnerHTML={{ __html: section.description }}
           />
         )}
       </div>
 
-      <div className="bg-gray-900 rounded-lg p-6 md:p-8">
+      <div className="bg-gray-900 rounded-lg p-6 xl:p-10">
         {section.values && section.values.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {section.values.map((feature, index) => (
-              <div
-                key={feature.id || index}
-                className="flex items-start gap-3 p-4  "
-              >
-                {feature.icon ? (
-                  <div className="flex-shrink-0 w-6 h-6 mt-1">
+              <div key={feature.id || index} className="flex items-start gap-4">
+                <div className="flex-shrink-0 mt-1">
+                  {feature.icon ? (
                     <Image
-                      src={feature.icon || "/placeholder.svg"}
-                      alt=""
+                      src={feature.icon}
+                      alt="Feature icon"
                       width={24}
                       height={24}
-                      className="w-full h-full object-contain"
+                      className="w-6 h-6 object-contain"
                     />
-                  </div>
-                ) : (
-                  <CheckCircle
-                    className="text-green-500 mt-1 flex-shrink-0"
-                    size={20}
-                  />
-                )}
+                  ) : (
+                    <CheckCircle className="text-green-500" size={20} />
+                  )}
+                </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-gray-100 mb-1">
+                  <h3 className="font-bold text-gray-100 mb-1 text-base xl:text-lg">
                     {feature.title}
                   </h3>
                   {feature.subtitle && (
-                    <p className="text-sm text-gray-400 mb-2">
+                    <p className="text-sm text-gray-400 mb-1">
                       {feature.subtitle}
                     </p>
                   )}
