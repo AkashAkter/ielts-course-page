@@ -55,7 +55,7 @@ export default function CourseExclusiveSection({
             {item.file_url && (
               <div className="w-full md:w-52 xl:w-60 flex-shrink-0">
                 <Image
-                  src={item.file_url}
+                  src={item.file_url || "/placeholder.svg"}
                   alt={item.title || "Feature image"}
                   width={300}
                   height={300}

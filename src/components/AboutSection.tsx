@@ -12,11 +12,8 @@ export default function AboutSection({ section }: AboutSectionProps) {
   const [openIndices, setOpenIndices] = useState<number[]>([0]);
 
   const toggleIndex = (index: number) => {
-    setOpenIndices(
-      (prev) =>
-        prev.includes(index)
-          ? prev.filter((i) => i !== index) // close
-          : [...prev, index] // open
+    setOpenIndices((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
   };
 

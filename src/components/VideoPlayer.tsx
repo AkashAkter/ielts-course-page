@@ -10,6 +10,24 @@ interface VideoPlayerProps {
   media: Media[];
 }
 
+const getYouTubeId = (url: string) => {
+  const regExp =
+    /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/i;
+  const match = url.match(regExp);
+  return match ? match[1] : url; // If it's already just the ID, return it
+};
+
+const getThumbnailUrl = (resourceValue: string, thumbnailUrl?: string) => {
+  if (thumbnailUrl) return thumbnailUrl;
+  const youtubeId = getYouTubeId(resourceValue);
+  return `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
+};
+
+const getEmbedUrl = (resourceValue: string) => {
+  const youtubeId = getYouTubeId(resourceValue);
+  return `https://www.youtube.com/embed/${youtubeId}?autoplay=1&modestbranding=1`;
+};
+
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ media }) => {
   // Explicitly defined as React.FC
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -46,14 +64,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ media }) => {
   const prevItem = () =>
     selectItem((currentIndex - 1 + allMedia.length) % allMedia.length);
 
-  // Use a more reliable thumbnail resolution
-  const getThumbnailUrl = (resourceValue: string, thumbnailUrl?: string) => {
-    return (
-      thumbnailUrl ||
-      `https://youtu.be/5wfn60rmWX4${resourceValue}/hqdefault.jpg`
-    );
-  };
-
   return (
     <section className=" p-4 xl:p-6">
       <div className="space-y-4">
@@ -86,7 +96,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ media }) => {
               </div>
             ) : (
               <iframe
-                src={`https://youtu.be/eDrXWrl-SOU${currentItem.resource_value}?autoplay=1&modestbranding=1`}
+                src={getEmbedUrl(currentItem.resource_value)}
                 title={currentItem.name || "Course preview video"}
                 className="w-full h-full"
                 allowFullScreen
@@ -131,7 +141,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ media }) => {
               <button
                 key={`${item.resource_value}-${index}`}
                 onClick={() => selectItem(index)}
-                className={`flex-shrink-0 relative w-24 h-16 rounded overflow-hidden transition-all duration-200 ${
+                className={`flex-shrink-0 relative w-24 h-16 overflow-hidden transition-all duration-200 ${
                   index === currentIndex
                     ? "ring-2 ring-offset-2 ring-green-600"
                     : "opacity-80 hover:opacity-100"

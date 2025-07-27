@@ -27,7 +27,6 @@ export default async function Home({ searchParams }: PageProps) {
     notFound();
   }
 
-  // Filter sections by type with null checks
   const instructorSections =
     productData.sections?.filter((section) => section.type === "instructors") ||
     [];
@@ -80,6 +79,7 @@ export default async function Home({ searchParams }: PageProps) {
           </div>
 
           {/* Mobile: 3. CTA Section (price + enroll button) */}
+          {/* This section has been removed on mobile devices and added as a sticky element in the mobile view */}
 
           {/* Mobile: 4. What You'll Get */}
           {productData.checklist && productData.checklist.length > 0 && (
@@ -206,7 +206,6 @@ export default async function Home({ searchParams }: PageProps) {
         </div>
       </main>
 
-      {/* Footer */}
       <Footer />
 
       {/* Mobile-only Sticky CTA */}

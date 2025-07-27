@@ -29,7 +29,7 @@ export default function FeaturesSection({ section }: FeaturesSectionProps) {
                 <div className="flex-shrink-0 mt-1">
                   {feature.icon ? (
                     <Image
-                      src={feature.icon}
+                      src={feature.icon || "/placeholder.svg"}
                       alt="Feature icon"
                       width={24}
                       height={24}

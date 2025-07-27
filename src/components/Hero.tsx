@@ -12,7 +12,6 @@ export default function Hero({ title, description }: HeroProps) {
       }}
     >
       <div className="absolute"></div>
-      {/* Content constrained to 1200px max-width */}
       <div className="relative max-w-[1200px] mx-auto px-4 py-16 md:py-20">
         <div className="w-full lg:w-3/5">
           <h1 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold mb-4 md:mb-6 leading-tight">
