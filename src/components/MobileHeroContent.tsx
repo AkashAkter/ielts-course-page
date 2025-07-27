@@ -8,13 +8,13 @@ export default function MobileHeroContent({
   description,
 }: MobileHeroContentProps) {
   return (
-    <section className="bg-white rounded-lg p-4">
-      <h1 className="text-xl font-bold mb-3 text-[#111827] leading-tight">
+    <section className=" rounded-lg px-4">
+      <h1 className="text-xl font-bold mb-3 text-white leading-tight">
         {title || "Course Title"}
       </h1>
       {description ? (
         <div
-          className="text-gray-600 prose prose-sm max-w-none prose-p:text-gray-600 prose-p:text-sm prose-p:leading-relaxed"
+          className="text-[#A3A3A3] prose prose-sm max-w-none prose-p:text-gray-600 prose-p:text-sm prose-p:leading-relaxed"
           dangerouslySetInnerHTML={{ __html: description }}
         />
       ) : (

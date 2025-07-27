@@ -12,6 +12,7 @@ import Footer from "@/components/Footer";
 import { notFound } from "next/navigation";
 import CourseExclusiveSection from "@/components/CourseExclusiveSection";
 import MobileHeroContent from "@/components/MobileHeroContent";
+import CTASectionMobile from "@/components/CTASectionMobile";
 
 interface PageProps {
   searchParams: { lang?: "en" | "bn" };
@@ -57,27 +58,28 @@ export default async function Home({ searchParams }: PageProps) {
       <main className="max-w-[1300] mx-auto px-4 py-6 lg:py-8">
         {/* Mobile Layout - Vertical Flow */}
         <div className="block lg:hidden space-y-6">
-          {/* Mobile: 1. Trailer Video Section */}
-          {productData.media && productData.media.length > 0 && (
-            <div className="mb-6">
-              <VideoPlayer media={productData.media} />
-            </div>
-          )}
+          <div
+            className="shadow-md p-4 xl:p-6 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage:
+                "url('https://cdn.10minuteschool.com/images/ui_%281%29_1716445506383.jpeg')",
+            }}
+          >
+            {/* Mobile: 1. Trailer Video Section */}
+            {productData.media && productData.media.length > 0 && (
+              <div className="mb-6">
+                <VideoPlayer media={productData.media} />
+              </div>
+            )}
 
-          {/* Mobile: 2. Product Title & Description */}
-          <MobileHeroContent
-            title={productData.title}
-            description={productData.description}
-          />
-
-          {/* Mobile: 3. CTA Section (price + enroll button) */}
-          <div className="mb-6">
-            <CTASection
-              ctaText={productData.cta_text}
-              productData={productData}
-              currentLang={lang}
+            {/* Mobile: 2. Product Title & Description */}
+            <MobileHeroContent
+              title={productData.title}
+              description={productData.description}
             />
           </div>
+
+          {/* Mobile: 3. CTA Section (price + enroll button) */}
 
           {/* Mobile: 4. What You'll Get */}
           {productData.checklist && productData.checklist.length > 0 && (
@@ -181,20 +183,16 @@ export default async function Home({ searchParams }: PageProps) {
           <div className="w-2/6">
             {/* Video Player - Negative margin to align with hero */}
             {productData.media && productData.media.length > 0 && (
-              <div className="-mt-20 xl:-mt-24 mb-8">
+              <div className="-mt-20 xl:-mt-24">
                 <VideoPlayer media={productData.media} />
               </div>
             )}
 
             {/* Static container for CTA and Checklist */}
-            <div className="space-y-6">
+            <div className="">
               {/* CTA Section */}
               <div>
-                <CTASection
-                  ctaText={productData.cta_text}
-                  productData={productData}
-                  currentLang={lang}
-                />
+                <CTASection ctaText={productData.cta_text} currentLang={lang} />
               </div>
 
               {/* Checklist */}
@@ -211,13 +209,9 @@ export default async function Home({ searchParams }: PageProps) {
       {/* Footer */}
       <Footer />
 
-      {/* Mobile CTA (no longer sticky) */}
-      <div className="lg:hidden p-4 bg-white border-t border-gray-200 shadow-lg">
-        <CTASection
-          ctaText={productData.cta_text}
-          productData={productData}
-          currentLang={lang}
-        />
+      {/* Mobile-only Sticky CTA */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white border-t border-gray-200 shadow-lg lg:hidden">
+        <CTASectionMobile ctaText={productData.cta_text} currentLang={lang} />
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ export default function InstructorSection({ section }: InstructorSectionProps) {
       <h2 className="text-xl xl:text-2xl font-bold mb-4 text-gray-800">
         {section.name}
       </h2>
+
       {section.description && (
         <div
           className="text-gray-600 mb-6 prose prose-sm xl:prose-base max-w-none"
@@ -25,7 +26,7 @@ export default function InstructorSection({ section }: InstructorSectionProps) {
           {section.values.map((instructor, index) => (
             <div
               key={instructor.id || index}
-              className="flex flex-col sm:flex-row items-center gap-4 p-3 xl:p-4 rounded-lg transition-colors border border-gray-200"
+              className="flex flex-row items-center gap-4 p-3 xl:p-4 rounded-lg transition-colors border border-gray-200"
             >
               {instructor.image && (
                 <div className="flex-shrink-0">
@@ -38,6 +39,7 @@ export default function InstructorSection({ section }: InstructorSectionProps) {
                   />
                 </div>
               )}
+
               <div className="flex-1 w-full">
                 <Link
                   href="https://10minuteschool.com/en/skills/instructors/munzereen-shahid/"

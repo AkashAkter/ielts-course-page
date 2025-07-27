@@ -1,5 +1,6 @@
 "use client";
 
+import type React from "react"; // Added React import
 import { useState } from "react";
 import type { Media } from "@/types/product";
 import { ChevronLeft, ChevronRight, Play } from "lucide-react";
@@ -9,149 +10,161 @@ interface VideoPlayerProps {
   media: Media[];
 }
 
-export default function VideoPlayer({ media }: VideoPlayerProps) {
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ media }) => {
+  // Explicitly defined as React.FC
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  // Filter only video media with proper null checks
-  const videos =
+  // Filter and combine all valid media (videos and images)
+  const allMedia =
     media?.filter(
-      (item) => item.resource_type === "video" && item.resource_value
+      (item) =>
+        (item.resource_type === "video" || item.resource_type === "image") &&
+        item.resource_value
     ) || [];
 
-  if (videos.length === 0) {
+  if (allMedia.length === 0) {
     return (
-      <section className="bg-white rounded-lg p-4 xl:p-6">
-        <h3 className="text-lg xl:text-2xl font-bold mb-3 xl:mb-4 text-[#111827]">
-          Course Preview
-        </h3>
+      <section className="bg-white rounded-lg p-4 xl:p-6 shadow-sm">
         <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
           <p className="text-gray-500 text-sm xl:text-base">
-            Video preview will be available soon
+            Preview will be available soon
           </p>
         </div>
       </section>
     );
   }
 
-  const currentVideo = videos[currentVideoIndex];
+  const currentItem = allMedia[currentIndex];
 
-  const nextVideo = () => {
-    setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
+  const selectItem = (index: number) => {
+    setCurrentIndex(index);
+    setIsPlaying(false);
   };
 
-  const prevVideo = () => {
-    setCurrentVideoIndex((prev) => (prev - 1 + videos.length) % videos.length);
+  const nextItem = () => selectItem((currentIndex + 1) % allMedia.length);
+  const prevItem = () =>
+    selectItem((currentIndex - 1 + allMedia.length) % allMedia.length);
+
+  // Use a more reliable thumbnail resolution
+  const getThumbnailUrl = (resourceValue: string, thumbnailUrl?: string) => {
+    return (
+      thumbnailUrl ||
+      `https://youtu.be/5wfn60rmWX4${resourceValue}/hqdefault.jpg`
+    );
   };
 
   return (
-    <section className="bg-white rounded-lg p-3 xl:p-6">
-      <h3 className="text-lg xl:text-2xl font-bold mb-3 xl:mb-4 text-[#111827]">
-        Course Preview
-      </h3>
-
-      <div className="relative">
-        {/* Main Video Player */}
-        <div className="aspect-video bg-gray-900 rounded-lg overflow-hidden mb-3 xl:mb-4">
-          {!isPlaying ? (
-            <div className="relative w-full h-full flex items-center justify-center">
-              {currentVideo.thumbnail_url ? (
+    <section className=" p-4 xl:p-6">
+      <div className="space-y-4">
+        {/* Main Media Display */}
+        <div className="aspect-video bg-black overflow-hidden relative">
+          {currentItem.resource_type === "video" ? (
+            !isPlaying ? (
+              <div className="relative w-full h-full">
                 <Image
-                  src={currentVideo.thumbnail_url || "/placeholder.svg"}
-                  alt={currentVideo.name}
+                  src={
+                    getThumbnailUrl(
+                      currentItem.resource_value,
+                      currentItem.thumbnail_url
+                    ) || "/placeholder.svg"
+                  }
+                  alt={currentItem.name || "Video thumbnail"}
                   fill
                   className="object-cover"
+                  unoptimized
                 />
-              ) : (
-                <Image
-                  src={`https://img.youtube.com/vi/${currentVideo.resource_value}/mqdefault.jpg`}
-                  alt={currentVideo.name}
-                  fill
-                  className="object-cover"
-                />
-              )}
-              <button
-                onClick={() => setIsPlaying(true)}
-                className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 hover:bg-opacity-30 transition"
-              >
-                <Play size={50} className="text-white" />
-              </button>
-            </div>
+                <button
+                  onClick={() => setIsPlaying(true)}
+                  className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/40 transition-colors"
+                  aria-label="Play video"
+                >
+                  <div className="bg-white/90 rounded-full p-3 shadow-lg hover:scale-105 transition-transform">
+                    <Play className="text-green-600 w-6 h-6 fill-current" />
+                  </div>
+                </button>
+              </div>
+            ) : (
+              <iframe
+                src={`https://youtu.be/eDrXWrl-SOU${currentItem.resource_value}?autoplay=1&modestbranding=1`}
+                title={currentItem.name || "Course preview video"}
+                className="w-full h-full"
+                allowFullScreen
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              />
+            )
           ) : (
-            <iframe
-              src={`https://www.youtube.com/embed/${currentVideo.resource_value}?autoplay=1`}
-              title={currentVideo.name}
-              className="w-full h-full"
-              allowFullScreen
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            <Image
+              src={currentItem.resource_value || "/placeholder.svg"}
+              alt={currentItem.name || "Course image"}
+              fill
+              className="object-cover"
+              unoptimized
             />
+          )}
+
+          {/* Navigation Arrows */}
+          {allMedia.length > 1 && (
+            <>
+              <button
+                onClick={prevItem}
+                className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1.5 shadow-md transition-all"
+                aria-label="Previous"
+              >
+                <ChevronLeft size={24} className="text-gray-800" />
+              </button>
+              <button
+                onClick={nextItem}
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1.5 shadow-md transition-all"
+                aria-label="Next"
+              >
+                <ChevronRight size={24} className="text-gray-800" />
+              </button>
+            </>
           )}
         </div>
 
-        {/* Video Navigation */}
-        {videos.length > 1 && (
-          <div className="flex items-center justify-between mb-3 xl:mb-4">
-            <button
-              onClick={prevVideo}
-              className="flex items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed p-2"
-              disabled={videos.length <= 1}
-            >
-              <ChevronLeft size={20} className="text-gray-700" />
-            </button>
-
-            <span className="text-xs xl:text-sm text-gray-600">
-              {currentVideoIndex + 1} of {videos.length}
-            </span>
-
-            <button
-              onClick={nextVideo}
-              className="flex items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed p-2"
-              disabled={videos.length <= 1}
-            >
-              <ChevronRight size={20} className="text-gray-700" />
-            </button>
-          </div>
-        )}
-
-        {/* Video Title */}
-        <h4 className="font-semibold text-[#111827] mb-2 xl:mb-3 text-sm xl:text-base leading-tight">
-          {currentVideo.name}
-        </h4>
-
-        {/* Video Thumbnails Slider - Mobile: Small thumbnails below */}
-        {videos.length > 1 && (
-          <div className="flex gap-1 xl:gap-2 overflow-x-auto pb-2">
-            {videos.map((video, index) => (
+        {/* Media Thumbnails */}
+        {allMedia.length > 1 && (
+          <div className="flex overflow-x-auto space-x-2 pb-2 no-scrollbar">
+            {allMedia.map((item, index) => (
               <button
-                key={`${video.name}-${index}`}
-                onClick={() => {
-                  setCurrentVideoIndex(index);
-                  setIsPlaying(false);
-                }}
-                className={`flex-shrink-0 relative ${
-                  index === currentVideoIndex ? "ring-2 ring-[#1CAB55]" : ""
-                } rounded overflow-hidden`}
+                key={`${item.resource_value}-${index}`}
+                onClick={() => selectItem(index)}
+                className={`flex-shrink-0 relative w-24 h-16 rounded overflow-hidden transition-all duration-200 ${
+                  index === currentIndex
+                    ? "ring-2 ring-offset-2 ring-green-600"
+                    : "opacity-80 hover:opacity-100"
+                }`}
+                aria-label={`View media ${index + 1}`}
               >
-                <div className="relative w-16 h-10 xl:w-24 xl:h-16">
-                  {video.thumbnail_url ? (
+                {item.resource_type === "video" ? (
+                  <>
                     <Image
-                      src={video.thumbnail_url || "/placeholder.svg"}
-                      alt={video.name}
+                      src={
+                        getThumbnailUrl(
+                          item.resource_value,
+                          item.thumbnail_url
+                        ) || "/placeholder.svg"
+                      }
+                      alt={item.name || `Video thumbnail ${index + 1}`}
                       fill
                       className="object-cover"
+                      unoptimized
                     />
-                  ) : (
-                    <Image
-                      src={`https://img.youtube.com/vi/${video.resource_value}/mqdefault.jpg`}
-                      alt={video.name}
-                      fill
-                      className="object-cover"
-                    />
-                  )}
-                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
-                    <Play size={10} className="text-white xl:w-3 xl:h-3" />
-                  </div>
-                </div>
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                      <Play className="text-white w-4 h-4 fill-current" />
+                    </div>
+                  </>
+                ) : (
+                  <Image
+                    src={item.resource_value || "/placeholder.svg"}
+                    alt={item.name || `Image ${index + 1}`}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                )}
               </button>
             ))}
           </div>
@@ -159,4 +172,6 @@ export default function VideoPlayer({ media }: VideoPlayerProps) {
       </div>
     </section>
   );
-}
+};
+
+export default VideoPlayer;
